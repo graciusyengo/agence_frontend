@@ -22,79 +22,62 @@ function Reservation() {
   const [filteredBuses, setFilteredBuses] = useState([]);
   const [filteredTrajets, setFilteredTrajets] = useState([]);
 
-  const handleChangeAgency = (e) => {
-    const value = e.target.value;
-    setInputValueAgency(value);
-
-    if (value.length > 0) {
-      const filterAgency = agencies.filter((agency) =>
-        agency.toLowerCase().includes(value.toLowerCase())
-      );
-      setSuggestionsAgency(filterAgency);
-    } else {
-      setSuggestionsAgency([]);
-    }
-    // Reset bus and trajet when agency changes
-    setInputValueBus("");
-    setFilteredBuses([]);
-    setInputValueTrajet("");
-    setFilteredTrajets([]);
-  };
-
-  const handleSelectAgency = (selectedAgency) => {
+  // Gestion de la sélection d'agence
+  const handleSelectAgency = (e) => {
+    const selectedAgency = e.target.value;
     setInputValueAgency(selectedAgency);
-    setSuggestionsAgency([]);
+
+    // Filtrer les bus associés à l'agence sélectionnée
     if (buses[selectedAgency]) {
       setFilteredBuses(buses[selectedAgency]);
     } else {
       setFilteredBuses([]);
     }
+
+    // Réinitialiser les valeurs bus et trajet après changement d'agence
     setInputValueBus("");
-    setInputValueTrajet("");
     setFilteredTrajets([]);
   };
 
   const handleSelectBus = (e) => {
     const selectedBus = e.target.value;
     setInputValueBus(selectedBus);
+
+    // Filtrer les trajets associés au bus sélectionné
     if (trajets[selectedBus]) {
       setFilteredTrajets(trajets[selectedBus]);
     } else {
       setFilteredTrajets([]);
     }
+
+    // Réinitialiser le trajet après changement de bus
     setInputValueTrajet("");
   };
 
   return (
-    <div className="reservation-container d-flex flex-column flex-md-row justify-content-between align-items-center ">
+    <div className="reservation-container d-flex flex-column flex-md-row justify-content-between align-items-center">
+      {/* Sélection d'Agence */}
       <div className="reservation-item d-flex align-items-center mb-3 mb-md-0">
         <div className="input-group">
           <span className="input-icon">
             <FontAwesomeIcon icon={faBuilding} />
           </span>
-          <input
-            type="text"
+          <select
             className="form-control"
-            placeholder="Entrez le nom de l'agence"
             value={inputValueAgency}
-            onChange={handleChangeAgency}
-          />
-          {suggestionsAgency.length > 0 && (
-            <ul className="suggestions-list">
-              {suggestionsAgency.map((suggestionAgency) => (
-                <li
-                  key={suggestionAgency}
-                  onClick={() => handleSelectAgency(suggestionAgency)}
-                >
-                  <FontAwesomeIcon icon={faBuilding} className="me-2" />
-                  {suggestionAgency}
-                </li>
-              ))}
-            </ul>
-          )}
+            onChange={handleSelectAgency}
+          >
+            <option value="">Sélectionnez une agence</option>
+            {agencies.map((agency) => (
+              <option key={agency} value={agency}>
+                {agency}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
+      {/* Sélection de Bus */}
       <div className="reservation-item d-flex align-items-center mb-3 mb-md-0">
         <div className="input-group">
           <span className="input-icon">
@@ -116,6 +99,7 @@ function Reservation() {
         </div>
       </div>
 
+      {/* Sélection de Trajet */}
       <div className="reservation-item d-flex align-items-center mb-3 mb-md-0">
         <div className="input-group">
           <span className="input-icon">
@@ -137,6 +121,7 @@ function Reservation() {
         </div>
       </div>
 
+      {/* Sélection de Date */}
       <div className="reservation-item d-flex align-items-center mb-3 mb-md-0">
         <div className="input-group">
           <span className="input-icon">
@@ -152,14 +137,13 @@ function Reservation() {
         </div>
       </div>
 
+      {/* Bouton Rechercher */}
       <div className="reservation-item d-flex align-items-center mb-3 mb-md-0">
         <button className="btn btn-primary d-flex align-items-center">
           <FontAwesomeIcon icon={faSearch} className="me-2" />
           Rechercher
         </button>
       </div>
-
-      {/* ... Autres parties de votre code */}
     </div>
   );
 }
